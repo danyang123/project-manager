@@ -451,13 +451,32 @@
 
     /* ===== Scrollbar ===== */
     .board::-webkit-scrollbar,
-    .column-body::-webkit-scrollbar { height: 8px; width: 8px; }
+    .column-body::-webkit-scrollbar { height: 10px; width: 10px; }
     .board::-webkit-scrollbar-track,
-    .column-body::-webkit-scrollbar-track { background: transparent; }
+    .column-body::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.03);
+      border-radius: var(--r-pill);
+      margin: 4px;
+    }
     .board::-webkit-scrollbar-thumb,
     .column-body::-webkit-scrollbar-thumb {
-      background: var(--text-placeholder);
+      background: rgba(0,0,0,0.15);
       border-radius: var(--r-pill);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      transition: background 0.2s;
+    }
+    .board::-webkit-scrollbar-thumb:hover,
+    .column-body::-webkit-scrollbar-thumb:hover {
+      background: rgba(0,0,0,0.28);
+    }
+    @media (prefers-color-scheme: dark) {
+      .board::-webkit-scrollbar-track,
+      .column-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+      .board::-webkit-scrollbar-thumb,
+      .column-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+      .board::-webkit-scrollbar-thumb:hover,
+      .column-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
     }
   </style>
 </head>
