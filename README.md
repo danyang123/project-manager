@@ -1,7 +1,5 @@
 # Project Manager
 
-一个轻量级的本地项目管理工具，支持莫兰迪色系和暗色模式。
-
 ![Preview](preview.png)
 
 ## 功能
