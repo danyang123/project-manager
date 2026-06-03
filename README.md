@@ -13,13 +13,9 @@
 
 ## 使用方式
 
-直接在浏览器中打开 `index.html` 即可使用，所有数据保存在浏览器本地存储（localStorage）中。
+**无需下载**，直接打开 [Live Demo](https://danyang123.github.io/project-manager/) 即可使用。也可以下载本仓库文件，在浏览器中打开 `index.html`。
 
-### 导入演示数据
-
-1. 打开页面，点击顶栏 **导入** 按钮
-2. 选择 `demo-data.json` 文件
-3. 即可看到示例项目数据
+所有数据保存在浏览器本地存储（localStorage）中，每个人的数据互不影响。打开即用，自动加载演示数据。
 
 ## 交互说明
 
