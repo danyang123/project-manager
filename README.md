@@ -1,6 +1,6 @@
 # Project Manager
 
-![Preview](preview.png)
+**[Live Demo →](https://danyang123.github.io/project-manager/)**
 
 ## 功能
 
