@@ -1,0 +1,43 @@
+{
+  "backlog": [
+    { "id": "b1", "title": "重构用户登录模块", "details": [], "expanded": false },
+    { "id": "b2", "title": "编写API接口文档", "details": [], "expanded": false },
+    { "id": "b3", "title": "优化数据库查询性能", "details": [], "expanded": false }
+  ],
+  "active": [
+    {
+      "id": "a1",
+      "title": "前端页面改版",
+      "details": [
+        { "text": "完成首页布局设计稿", "date": "2026-05-20" },
+        { "text": "实现响应式适配\n移动端和桌面端均已测试通过", "date": "2026-05-28" },
+        { "text": "修复 Safari 下毛玻璃效果不生效的问题\n添加 -webkit-backdrop-filter 前缀", "date": "2026-06-01" }
+      ],
+      "expanded": true
+    },
+    {
+      "id": "a2",
+      "title": "支付系统对接",
+      "details": [
+        { "text": "对接支付宝沙箱环境", "date": "2026-05-25" },
+        { "text": "处理回调验签逻辑", "date": "2026-06-02" }
+      ],
+      "expanded": true
+    }
+  ],
+  "done": [
+    {
+      "id": "d1",
+      "title": "项目初始化搭建",
+      "details": [
+        { "text": "创建仓库并配置 CI/CD", "date": "2026-05-10" },
+        { "text": "配置 ESLint + Prettier 代码规范", "date": "2026-05-11" }
+      ],
+      "expanded": false
+    }
+  ],
+  "uncertain": [
+    { "id": "u1", "title": "国际化多语言支持", "details": [], "expanded": false },
+    { "id": "u2", "title": "暗色模式适配", "details": [], "expanded": false }
+  ]
+}
