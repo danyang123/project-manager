@@ -582,9 +582,18 @@
       ]
     };
 
+    function sortDetails(details) {
+      details.sort(function(a, b) {
+        if (a.date && b.date) return b.date.localeCompare(a.date);
+        if (a.date && !b.date) return -1;
+        if (!a.date && b.date) return 1;
+        return 0;
+      });
+    }
+
     function normalizeDetails(details) {
       if (!Array.isArray(details)) return [];
-      return details.map(function(d) {
+      var result = details.map(function(d) {
         if (typeof d === 'string') {
           return { text: d, date: '' };
         }
@@ -593,6 +602,8 @@
           date: d && typeof d.date === 'string' ? d.date : ''
         };
       });
+      sortDetails(result);
+      return result;
     }
 
     function normalizeItems(items, expandedDefault) {
@@ -735,6 +746,40 @@
       if (!e.target.closest('.card')) clearCardSelection();
     });
 
+    /* ===== Drag & drop to reorder active projects ===== */
+    var dragItemId = null;
+    document.addEventListener('dragstart', function(e) {
+      var col = e.target.closest('.status-active');
+      if (!col) return;
+      dragItemId = col.getAttribute('data-itemid');
+      col.style.opacity = '0.5';
+    });
+    document.addEventListener('dragend', function(e) {
+      var col = e.target.closest('.status-active');
+      if (col) col.style.opacity = '';
+      dragItemId = null;
+    });
+    document.addEventListener('dragover', function(e) {
+      if (!dragItemId) return;
+      var col = e.target.closest('.status-active');
+      if (!col || col.getAttribute('data-itemid') === dragItemId) return;
+      e.preventDefault();
+    });
+    document.addEventListener('drop', function(e) {
+      if (!dragItemId) return;
+      var col = e.target.closest('.status-active');
+      if (!col || col.getAttribute('data-itemid') === dragItemId) return;
+      e.preventDefault();
+      var targetId = col.getAttribute('data-itemid');
+      var fromIdx = state.active.findIndex(function(x) { return x.id === dragItemId; });
+      var toIdx = state.active.findIndex(function(x) { return x.id === targetId; });
+      if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
+      var item = state.active.splice(fromIdx, 1)[0];
+      state.active.splice(toIdx, 0, item);
+      dragItemId = null;
+      requestRender();
+    });
+
     function saveState() {
       try {
         const pure = {
@@ -777,7 +822,7 @@
       return `
         <div class="detail-item" data-group="${groupName}" data-item="${itemId}" data-index="${index}" onclick="selectDetail(event,'${groupName}','${itemId}',${index})">
           <div class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</div>
-          ${detail.date ? `<div class="detail-date" contenteditable="true" onblur="saveDetailDate('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.date)}</div>` : ''}
+          ${detail.date ? `<div class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</div>` : ''}
         </div>
       `;
     }
@@ -837,9 +882,10 @@
         ? items.map(function(item) { return renderCard(item, groupName, allowAdd); }).join('')
         : '<div class="empty">暂无内容</div>';
       var hasArrow = expandState !== undefined && items.length === 1;
+      var dragAttr = groupName === 'active' && items.length === 1 ? 'draggable="true"' : '';
       return `
-        <div class="column ${statusClass}">
-          <div class="column-header">
+        <div class="column ${statusClass}" ${dragAttr} data-itemid="${items.length === 1 ? items[0].id : ''}">
+          <div class="column-header" style="${groupName === 'active' ? 'cursor:grab' : ''}">
             <div>${escapeHtml(title)}${hasArrow ? '<span class="expand-arrow" style="margin-left:4px;font-size:11px;vertical-align:middle;cursor:pointer" onclick="toggleExpand(\'' + groupName + '\',\'' + items[0].id + '\');event.stopPropagation()" title="' + (expandState ? '收起' : '展开') + '">' + (expandState ? '▲' : '▼') + '</span>' : ''}</div>
             <div class="count">${items.length}</div>
           </div>
@@ -934,6 +980,7 @@
         return;
       }
       item.details.push({ text: text, date: date });
+      sortDetails(item.details);
       item.showAddPanel = false;
       requestRender();
     }
@@ -952,14 +999,29 @@
       }
     }
 
-    function saveDetailDate(groupName, id, index, el) {
-      const item = getItem(groupName, id);
+    function editDetailDate(event, groupName, id, index) {
+      event.stopPropagation();
+      clearDetailSelection();
+      var el = event.target;
+      var item = getItem(groupName, id);
       if (!item || !item.details[index]) return;
-      const newDate = (el.innerText || el.textContent || '').trim();
-      if (newDate !== (item.details[index].date || '')) {
-        item.details[index].date = newDate;
-        saveState();
-      }
+      var oldDate = item.details[index].date || '';
+      var input = document.createElement('input');
+      input.type = 'date';
+      input.value = oldDate;
+      input.style.cssText = 'font-size:var(--fs-caption);font-family:var(--font-family);color:var(--text-tertiary);border:none;background:transparent;padding:0;margin:0;width:auto;';
+      el.innerHTML = '';
+      el.appendChild(input);
+      input.focus();
+      input.onchange = function() {
+        if (input.value !== oldDate) {
+          item.details[index].date = input.value;
+          sortDetails(item.details);
+          saveState();
+        }
+        requestRender();
+      };
+      input.onblur = function() { requestRender(); };
     }
 
     function deleteDetail(groupName, id, index) {
