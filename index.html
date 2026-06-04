@@ -354,14 +354,20 @@
       outline: 1.5px solid rgba(0,122,255,0.35);
       outline-offset: -1px;
     }
+    .detail-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
     .detail-text {
+      flex: 1;
       font-size: var(--fs-detail);
       line-height: 1.45;
       color: var(--text-primary);
       white-space: pre-wrap;
       word-break: break-word;
       cursor: text;
-      padding: 3px 4px;
+      padding: 2px 4px;
       border-radius: 3px;
       transition: background var(--tf);
     }
@@ -372,10 +378,21 @@
       box-shadow: 0 0 0 1.5px rgba(0,122,255,0.25);
     }
     .detail-date {
+      flex-shrink: 0;
       font-size: var(--fs-caption);
       color: var(--text-tertiary);
-      margin-top: 2px;
+      cursor: pointer;
+      padding: 2px 2px;
+      border-radius: 3px;
+      min-width: 80px;
     }
+    .detail-date-empty {
+      visibility: hidden;
+      min-width: 0;
+      width: 0;
+      padding: 0;
+    }
+    .detail-date:hover { background: rgba(0,0,0,0.04); }
 
     /* Add / End row */
     .add-end-row {
@@ -584,7 +601,7 @@
 
     function sortDetails(details) {
       details.sort(function(a, b) {
-        if (a.date && b.date) return b.date.localeCompare(a.date);
+        if (a.date && b.date) return a.date.localeCompare(b.date);
         if (a.date && !b.date) return -1;
         if (!a.date && b.date) return 1;
         return 0;
@@ -821,8 +838,10 @@
     function renderDetailItem(groupName, itemId, detail, index) {
       return `
         <div class="detail-item" data-group="${groupName}" data-item="${itemId}" data-index="${index}" onclick="selectDetail(event,'${groupName}','${itemId}',${index})">
-          <div class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</div>
-          ${detail.date ? `<div class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</div>` : ''}
+          <div class="detail-row">
+            ${detail.date ? `<span class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</span>` : '<span class="detail-date detail-date-empty"></span>'}
+            <span class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</span>
+          </div>
         </div>
       `;
     }
