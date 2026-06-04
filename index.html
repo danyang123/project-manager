@@ -354,12 +354,7 @@
       outline: 1.5px solid rgba(0,122,255,0.35);
       outline-offset: -1px;
     }
-    .detail-body {
-      display: flex;
-      align-items: flex-start;
-    }
     .detail-text {
-      flex: 1;
       font-size: var(--fs-detail);
       line-height: 1.45;
       color: var(--text-primary);
@@ -375,12 +370,6 @@
       outline: none;
       background: rgba(0,122,255,0.05);
       box-shadow: 0 0 0 1.5px rgba(0,122,255,0.25);
-    }
-    .detail-grip {
-      flex-shrink: 0;
-      width: 6px;
-      align-self: stretch;
-      cursor: pointer;
     }
     .detail-date {
       font-size: var(--fs-caption);
@@ -835,10 +824,7 @@
     function renderDetailItem(groupName, itemId, detail, index) {
       return `
         <div class="detail-item" data-group="${groupName}" data-item="${itemId}" data-index="${index}" onclick="selectDetail(event,'${groupName}','${itemId}',${index})">
-          <div class="detail-body">
-            <div class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</div>
-            <div class="detail-grip"></div>
-          </div>
+          <div class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</div>
           ${detail.date ? `<div class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</div>` : ''}
         </div>
       `;
