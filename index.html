@@ -1021,8 +1021,6 @@
     }
 
     function clearAllData() {
-      const ok = window.confirm('确定清空所有项目吗？此操作不可恢复。');
-      if (!ok) return;
       localStorage.removeItem(STORAGE_KEY);
       var demo = deepClone(demoState);
       state.backlog = demo.backlog;
