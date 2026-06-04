@@ -354,10 +354,9 @@
       outline: 1.5px solid rgba(0,122,255,0.35);
       outline-offset: -1px;
     }
-    .detail-row {
+    .detail-body {
       display: flex;
-      align-items: baseline;
-      gap: 6px;
+      align-items: flex-start;
     }
     .detail-text {
       flex: 1;
@@ -377,20 +376,18 @@
       background: rgba(0,122,255,0.05);
       box-shadow: 0 0 0 1.5px rgba(0,122,255,0.25);
     }
-    .detail-date {
+    .detail-grip {
       flex-shrink: 0;
+      width: 6px;
+      align-self: stretch;
+      cursor: pointer;
+    }
+    .detail-date {
       font-size: var(--fs-caption);
       color: var(--text-tertiary);
       cursor: pointer;
-      padding: 2px 2px;
+      padding: 0 4px;
       border-radius: 3px;
-      min-width: 80px;
-    }
-    .detail-date-empty {
-      visibility: hidden;
-      min-width: 0;
-      width: 0;
-      padding: 0;
     }
     .detail-date:hover { background: rgba(0,0,0,0.04); }
 
@@ -838,10 +835,11 @@
     function renderDetailItem(groupName, itemId, detail, index) {
       return `
         <div class="detail-item" data-group="${groupName}" data-item="${itemId}" data-index="${index}" onclick="selectDetail(event,'${groupName}','${itemId}',${index})">
-          <div class="detail-row">
-            ${detail.date ? `<span class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</span>` : '<span class="detail-date detail-date-empty"></span>'}
-            <span class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</span>
+          <div class="detail-body">
+            <div class="detail-text" contenteditable="true" onblur="saveDetailText('${groupName}','${itemId}',${index},this)" onfocus="clearDetailSelection()">${escapeHtml(detail.text)}</div>
+            <div class="detail-grip"></div>
           </div>
+          ${detail.date ? `<div class="detail-date" onclick="editDetailDate(event,'${groupName}','${itemId}',${index})">${escapeHtml(detail.date)}</div>` : ''}
         </div>
       `;
     }
